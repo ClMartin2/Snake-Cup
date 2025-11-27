@@ -93,6 +93,11 @@ public class ObjectPoolManager : MonoBehaviour
             var parent = transform.Find(key + "_Pool");
             go.transform.SetParent(parent);
             poolQueues[key].Enqueue(go);
+
+            IObjectPool objectPoll;
+
+            if (go.TryGetComponent(out objectPoll))
+                objectPoll.Release();
         }
         else
         {

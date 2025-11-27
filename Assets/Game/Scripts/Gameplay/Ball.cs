@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Ball : MonoBehaviour
+public class Ball : MonoBehaviour, IObjectPool
 {
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private ColliderEvent colliderEvent;
@@ -18,5 +18,10 @@ public class Ball : MonoBehaviour
         {
             ObjectPoolManager.Instance.Release(gameObject);
         }
+    }
+
+    public void Release()
+    {
+        hasBeenMultiplied = false;
     }
 }
