@@ -24,6 +24,7 @@ public class SnakeManager : MonoBehaviour
     private List<Vector3> pathPositions = new(); // ancienne -> récente
     private List<float> pathCumulative = new();
     private float progressRatio = 0f;
+    private List<SnakePart> snakeParts = new();
 
     private void Start()
     {

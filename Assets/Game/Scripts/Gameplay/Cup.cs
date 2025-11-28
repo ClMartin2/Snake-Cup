@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 public class Cup : MonoBehaviour
 {
     [SerializeField] private InputActionReference click;
-    [SerializeField] private bool debugMobile = false;
+    [SerializeField] private float maxXLength = 500;
 
     [Header("Ball Settings")]
     [SerializeField] private int numberStartBall = 4;
     [SerializeField] private string ballKeyPool = "Ball";
     [SerializeField] private float delayToSpawnBall = 0.5f;
+
+    [Header("Debug")]
+    [SerializeField] private bool debugMobile = false;
 
     private Coroutine coroutineFollowMouse;
     private float counterToSpawnBall;
@@ -42,7 +45,8 @@ public class Cup : MonoBehaviour
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
             Vector2 worldMousePosition = Application.isMobilePlatform ? Touchscreen.current.touches[0].position.ReadValue() : Camera.main.ScreenToWorldPoint(mousePosition);
-            Vector2 cupPosition = new Vector2(worldMousePosition.x, transform.position.y);
+            float clampedX = Mathf.Clamp(worldMousePosition.x, -maxXLength, maxXLength);
+            Vector2 cupPosition = new Vector2(clampedX, transform.position.y);
 
             transform.position = cupPosition;
 
@@ -59,8 +63,6 @@ public class Cup : MonoBehaviour
 
             yield return null;
         }
-
-        yield return null;
     }
 
     [ContextMenu("AddBall")]
