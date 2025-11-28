@@ -31,11 +31,12 @@ public class Multiplier : MonoBehaviour
         for (int i = 0; i < multipler - 1; i++)
         {
             Transform transformBall = ObjectPoolManager.Instance.Get(keyBall).transform;
+            Ball _ball = transformBall.GetComponent<Ball>();
 
-            transformBall.GetComponent<Ball>().hasBeenMultiplied = true;
-            transformBall.position = transform.position;
+            _ball.hasBeenMultiplied = true;
+            transformBall.position = ball.transform.position;
 
-            CreateBallMultiplier(this,transformBall.GetComponent<Ball>());  
+            CreateBallMultiplier?.Invoke(this, _ball);  
         }
     }
 }

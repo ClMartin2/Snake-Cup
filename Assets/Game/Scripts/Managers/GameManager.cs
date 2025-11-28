@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private Vector2 limit = new Vector2(2, 2);
+
     [SerializeField] private Cup cup;
     [SerializeField] private List<Multiplier> multiplier = new();
     [SerializeField] private SnakeManager snakeManager;
 
+    public static Vector2 Limit;
     public static GameManager Instance;
 
     private void Awake()
@@ -16,6 +19,7 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+        Limit = limit;
         cup.CreateBall += Cup_CreateBall;
         
         foreach (Multiplier multiplier in multiplier)

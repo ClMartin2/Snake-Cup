@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,12 +8,14 @@ public delegate void CupEventHandler(Cup sender, Ball ball);
 public class Cup : MonoBehaviour
 {
     [SerializeField] private InputActionReference click;
-    [SerializeField] private float maxXLength = 500;
+    [SerializeField] private TextMeshPro txtNumberOfBallAvailable;
 
     [Header("Ball Settings")]
     [SerializeField] private int numberStartBall = 4;
     [SerializeField] private string ballKeyPool = "Ball";
     [SerializeField] private float delayToSpawnBall = 0.5f;
+    [SerializeField] private float delayToHaveNewBall = 0.1f;
+    [SerializeField] private int numberOfNewBall = 2;
 
     [Header("Debug")]
     [SerializeField] private bool debugMobile = false;
@@ -22,6 +25,7 @@ public class Cup : MonoBehaviour
     private Coroutine coroutineFollowMouse;
     private float counterToSpawnBall;
     private float counterNumberOfAvailableBall;
+    private float counterToHaveNewBall = 0;
 
     private void Awake()
     {
@@ -29,6 +33,12 @@ public class Cup : MonoBehaviour
         click.action.performed += ClickPerformed;
         click.action.canceled += ClickCanceled;
         counterNumberOfAvailableBall = numberStartBall;
+        UpdateTxtBallAvailable();
+    }
+
+    private void UpdateTxtBallAvailable()
+    {
+        txtNumberOfBallAvailable.text = counterNumberOfAvailableBall.ToString();
     }
 
     private void ClickCanceled(InputAction.CallbackContext obj)
@@ -49,7 +59,7 @@ public class Cup : MonoBehaviour
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
             Vector2 worldMousePosition = Application.isMobilePlatform ? Touchscreen.current.touches[0].position.ReadValue() : Camera.main.ScreenToWorldPoint(mousePosition);
-            float clampedX = Mathf.Clamp(worldMousePosition.x, -maxXLength, maxXLength);
+            float clampedX = Mathf.Clamp(worldMousePosition.x, GameManager.Limit.x, GameManager.Limit.y);
             Vector2 cupPosition = new Vector2(clampedX, transform.position.y);
 
             transform.position = cupPosition;
@@ -64,10 +74,23 @@ public class Cup : MonoBehaviour
 
                 counterNumberOfAvailableBall--;
 
-                CreateBall(this, ball.GetComponent<Ball>());
+                CreateBall?.Invoke(this, ball.GetComponent<Ball>());
+                UpdateTxtBallAvailable();
             }
 
             yield return null;
+        }
+    }
+
+    private void Update()
+    {
+        counterToHaveNewBall += Time.deltaTime;
+
+        if(counterToHaveNewBall >= delayToHaveNewBall)
+        {
+            counterNumberOfAvailableBall += numberOfNewBall;
+            counterToHaveNewBall = 0;
+            UpdateTxtBallAvailable();
         }
     }
 
@@ -75,6 +98,7 @@ public class Cup : MonoBehaviour
     private void AddBall()
     {
         counterNumberOfAvailableBall++;
+        UpdateTxtBallAvailable();
     }
 
     private void OnDestroy()

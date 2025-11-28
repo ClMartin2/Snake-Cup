@@ -88,6 +88,12 @@ public class SnakeManager : MonoBehaviour
 
     public void TakeDamage(int Damage)
     {
+        if (snakeParts.Count <= 0)
+        {
+            Debug.Log("Win");
+            return;
+        }
+
         snakeParts[0].TakeDamage(Damage);
     }
 
@@ -103,6 +109,9 @@ public class SnakeManager : MonoBehaviour
         Vector3 tangent = splineContainer.EvaluateTangent(splineContainer.Spline, progressRatio);
         float angle = Mathf.Atan2(tangent.y, tangent.x) * Mathf.Rad2Deg;
         segments[0].rotation = Quaternion.Euler(0f, 0f, angle);
+
+        if (progressRatio >= 1)
+            Debug.Log("Loose");
     }
 
     private void RecordHeadPosition()
