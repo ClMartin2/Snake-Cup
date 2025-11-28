@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+public delegate void MultiplierEventHandler(Multiplier sender, Ball ball);
 
 public class Multiplier : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Multiplier : MonoBehaviour
     [SerializeField] private float multipler;
     [SerializeField] private ColliderEvent colliderEvent;
     [SerializeField] private string keyBall = "Ball";
+
+    public event MultiplierEventHandler CreateBallMultiplier;
 
     private void Awake()
     {
@@ -31,6 +34,8 @@ public class Multiplier : MonoBehaviour
 
             transformBall.GetComponent<Ball>().hasBeenMultiplied = true;
             transformBall.position = transform.position;
+
+            CreateBallMultiplier(this,transformBall.GetComponent<Ball>());  
         }
     }
 }

@@ -33,6 +33,14 @@ public class SnakeManager : MonoBehaviour
         {
             Transform t = Instantiate(bodyPartPrefabs[i], transform.position, Quaternion.identity, transform).transform;
             segments.Add(t);
+
+            SnakePart snakePart;
+
+            if (t.TryGetComponent(out snakePart))
+            {
+                snakeParts.Add(snakePart);
+                snakePart.OnDie += SnakePart_OnDie;
+            }
         }
 
         // Place les segments immédiatement à droite de la tête (sans attendre que la tête bouge)
@@ -49,10 +57,12 @@ public class SnakeManager : MonoBehaviour
         // Pré-remplir l'historique avec ces positions (de l'ancienne vers la plus récente)
         pathPositions.Clear();
         pathCumulative.Clear();
+
         for (int i = segments.Count - 1; i >= 0; i--)
         {
             pathPositions.Add(segments[i].position);
         }
+
         pathCumulative.Add(0f);
         for (int i = 1; i < pathPositions.Count; i++)
         {
@@ -61,12 +71,24 @@ public class SnakeManager : MonoBehaviour
         }
     }
 
+    private void SnakePart_OnDie(SnakePart sender)
+    {
+        segments.Remove(segments.Find(x => x == sender.transform));
+        snakeParts.Remove(sender);
+        Destroy(sender.gameObject);
+    }
+
     private void Update()
     {
         MoveHeadAlongSpline();
         RecordHeadPosition();
         UpdateSegmentsPositions();
         TrimHistoryIfNeeded();
+    }
+
+    public void TakeDamage(int Damage)
+    {
+        snakeParts[0].TakeDamage(Damage);
     }
 
     private void MoveHeadAlongSpline()

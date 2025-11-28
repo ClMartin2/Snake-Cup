@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public delegate void CupEventHandler(Cup sender, Ball ball);
+
 public class Cup : MonoBehaviour
 {
     [SerializeField] private InputActionReference click;
@@ -14,6 +16,8 @@ public class Cup : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool debugMobile = false;
+
+    public event CupEventHandler CreateBall;
 
     private Coroutine coroutineFollowMouse;
     private float counterToSpawnBall;
@@ -59,6 +63,8 @@ public class Cup : MonoBehaviour
                 counterToSpawnBall = 0;
 
                 counterNumberOfAvailableBall--;
+
+                CreateBall(this, ball.GetComponent<Ball>());
             }
 
             yield return null;

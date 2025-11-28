@@ -1,11 +1,15 @@
 using UnityEngine;
 
+public delegate void ValidateBall(Ball sender);
+
 public class Ball : MonoBehaviour, IObjectPool
 {
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private ColliderEvent colliderEvent;
+    [field: SerializeField] public int damage { get; private set; } = 1;
 
     public bool hasBeenMultiplied = false;
+    public event ValidateBall OnValidateBall;
 
     private void Awake()
     {
@@ -16,8 +20,14 @@ public class Ball : MonoBehaviour, IObjectPool
     {
         if (((1 << collision.gameObject.layer) & targetLayer) != 0)
         {
-            ObjectPoolManager.Instance.Release(gameObject);
+            ValidateBall();
         }
+    }
+
+    private void ValidateBall()
+    {
+        OnValidateBall?.Invoke(this);   
+        ObjectPoolManager.Instance.Release(gameObject);
     }
 
     public void Release()
