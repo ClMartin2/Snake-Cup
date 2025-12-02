@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Splines;
 
+public delegate void SnakeManagerEventHandler(SnakeManager sender);
+
 public class SnakeManager : MonoBehaviour
 {
     [Header("Segments & movement")]
@@ -19,6 +21,9 @@ public class SnakeManager : MonoBehaviour
     [SerializeField] private float followSpeed = 5f;      // vitesse de déplacement interne des segments (units/s)
     [SerializeField] private float rotationSmooth = 8f;   // lissage rotation (plus grand = plus rapide)
     [SerializeField] private float rotationApplyThreshold = 0.001f; // dir threshold pour appliquer la rotation
+
+    public event SnakeManagerEventHandler Win;
+    public event SnakeManagerEventHandler Loose;
 
     private List<Transform> segments = new();
     private List<Vector3> pathPositions = new(); // ancienne -> récente
@@ -90,7 +95,7 @@ public class SnakeManager : MonoBehaviour
     {
         if (snakeParts.Count <= 0)
         {
-            Debug.Log("Win");
+            Win?.Invoke(this);
             return;
         }
 
@@ -111,7 +116,7 @@ public class SnakeManager : MonoBehaviour
         segments[0].rotation = Quaternion.Euler(0f, 0f, angle);
 
         if (progressRatio >= 1)
-            Debug.Log("Loose");
+            Loose?.Invoke(this);
     }
 
     private void RecordHeadPosition()

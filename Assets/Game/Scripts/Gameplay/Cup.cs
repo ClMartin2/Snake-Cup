@@ -16,6 +16,7 @@ public class Cup : MonoBehaviour
     [SerializeField] private float delayToSpawnBall = 0.5f;
     [SerializeField] private float delayToHaveNewBall = 0.1f;
     [SerializeField] private int numberOfNewBall = 2;
+    [SerializeField] private Transform ballSpawnPoint;
 
     [Header("Debug")]
     [SerializeField] private bool debugMobile = false;
@@ -69,7 +70,7 @@ public class Cup : MonoBehaviour
             if (counterNumberOfAvailableBall > 0 && counterToSpawnBall >= delayToSpawnBall) {
                 Transform ball = ObjectPoolManager.Instance.Get(ballKeyPool).transform;
 
-                ball.position = cupPosition;
+                ball.position = ballSpawnPoint.position;
                 counterToSpawnBall = 0;
 
                 counterNumberOfAvailableBall--;
