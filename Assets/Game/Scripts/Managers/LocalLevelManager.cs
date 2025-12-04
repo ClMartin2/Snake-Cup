@@ -30,12 +30,18 @@ public class LocalLevelManager : MonoBehaviour
 
     private void SnakeManager_Loose(SnakeManager sender)
     {
-        gameManager.Win();
+        gameManager.Loose();
+
+        snakeManager.Pause(true);
+        snakeManager.Restart();
+
+        cup.Pause(true);
+        cup.Restart();
     }
 
     private void SnakeManager_Win(SnakeManager sender)
     {
-        gameManager.Loose();
+        gameManager.Win();
     }
 
     private void Multiplier_CreateBallMultiplier(Multiplier sender, Ball ball)

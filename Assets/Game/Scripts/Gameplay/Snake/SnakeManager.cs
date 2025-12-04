@@ -28,10 +28,61 @@ public class SnakeManager : MonoBehaviour
     private List<Transform> segments = new();
     private List<Vector3> pathPositions = new(); // ancienne -> récente
     private List<float> pathCumulative = new();
-    private float progressRatio = 0f;
     private List<SnakePart> snakeParts = new();
 
+    private float progressRatio = 0f;
+    private bool pause = false;
+
     private void Start()
+    {
+        Init();
+    }
+
+    private void Update()
+    {
+        if (pause)
+            return;
+
+        MoveHeadAlongSpline();
+        RecordHeadPosition();
+        UpdateSegmentsPositions();
+        TrimHistoryIfNeeded();
+    }
+
+    public void Pause(bool _pause)
+    {
+        pause = _pause;
+    }
+
+    public void TakeDamage(int Damage)
+    {
+        if (snakeParts.Count <= 0)
+        {
+            Win?.Invoke(this);
+            return;
+        }
+
+        snakeParts[0].TakeDamage(Damage);
+    }
+
+    public void Restart()
+    {
+        progressRatio = 0f;
+
+        foreach (Transform segment in segments)
+        {
+            Destroy(segment.gameObject);
+        }
+
+        segments.Clear();
+        pathPositions.Clear();
+        pathCumulative.Clear();
+        snakeParts.Clear();
+
+        Init();
+    }
+
+    private void Init()
     {
         // Instanciation des segments
         for (int i = 0; i < bodyPartPrefabs.Count; i++)
@@ -48,8 +99,10 @@ public class SnakeManager : MonoBehaviour
             }
         }
 
+
         // Place les segments immédiatement à droite de la tête (sans attendre que la tête bouge)
         Vector3 headStart = segments[0].position = splineContainer != null ? splineContainer.EvaluatePosition(progressRatio) : transform.position;
+
         for (int i = 0; i < segments.Count; i++)
         {
             Vector3 target = headStart - transform.right * i * distanceBetween;
@@ -81,25 +134,6 @@ public class SnakeManager : MonoBehaviour
         segments.Remove(segments.Find(x => x == sender.transform));
         snakeParts.Remove(sender);
         Destroy(sender.gameObject);
-    }
-
-    private void Update()
-    {
-        MoveHeadAlongSpline();
-        RecordHeadPosition();
-        UpdateSegmentsPositions();
-        TrimHistoryIfNeeded();
-    }
-
-    public void TakeDamage(int Damage)
-    {
-        if (snakeParts.Count <= 0)
-        {
-            Win?.Invoke(this);
-            return;
-        }
-
-        snakeParts[0].TakeDamage(Damage);
     }
 
     private void MoveHeadAlongSpline()
@@ -142,7 +176,7 @@ public class SnakeManager : MonoBehaviour
 
     private void UpdateSegmentsPositions()
     {
-        if (pathPositions.Count < 2) return;
+        if (pathPositions.Count < 2 || pause) return;
 
         float totalDistance = pathCumulative[pathCumulative.Count - 1];
 

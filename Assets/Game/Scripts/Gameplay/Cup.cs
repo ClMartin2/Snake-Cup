@@ -27,6 +27,7 @@ public class Cup : MonoBehaviour
     private float counterToSpawnBall;
     private float counterNumberOfAvailableBall;
     private float counterToHaveNewBall = 0;
+    private bool pause = false;
 
     private void Awake()
     {
@@ -37,6 +38,37 @@ public class Cup : MonoBehaviour
         UpdateTxtBallAvailable();
     }
 
+    public void Pause(bool _pause)
+    {
+        pause = _pause;
+
+        if (pause)
+        {
+            click.action.Disable();
+            StopCoroutineFollow();
+        }
+        else
+        {
+            click.action.Enable();
+        }
+    }
+
+    public void Restart()
+    {
+        counterNumberOfAvailableBall = numberStartBall;
+        counterToHaveNewBall = 0;
+        UpdateTxtBallAvailable();
+    }
+
+    private void StopCoroutineFollow()
+    {
+        if (coroutineFollowMouse != null)
+        {
+            StopCoroutine(coroutineFollowMouse);
+            coroutineFollowMouse = null;
+        }
+    }
+
     private void UpdateTxtBallAvailable()
     {
         txtNumberOfBallAvailable.text = counterNumberOfAvailableBall.ToString();
@@ -44,8 +76,7 @@ public class Cup : MonoBehaviour
 
     private void ClickCanceled(InputAction.CallbackContext obj)
     {
-       StopCoroutine(coroutineFollowMouse);
-       coroutineFollowMouse = null;
+        StopCoroutineFollow();
     }
 
     private void ClickPerformed(InputAction.CallbackContext obj)
@@ -85,6 +116,9 @@ public class Cup : MonoBehaviour
 
     private void Update()
     {
+        if (pause)
+            return;
+
         counterToHaveNewBall += Time.deltaTime;
 
         if(counterToHaveNewBall >= delayToHaveNewBall)

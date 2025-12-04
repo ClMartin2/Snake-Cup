@@ -7,11 +7,14 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<WorldData> allWorlds = new();
     [SerializeField] private WorldData startWorld;
+    [SerializeField] private float startMoney = 10;
+    [SerializeField] private Menu menu;
 
     [SerializeField] private Vector2 limit = new Vector2(2, 2);
 
     public static Vector2 Limit;
     public static GameManager Instance;
+    public float money = 0;
 
     private WorldData currentWorldData;
     private int currentLevelIndex = 0;
@@ -19,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
@@ -28,11 +31,13 @@ public class GameManager : MonoBehaviour
 
         currentWorldData = startWorld;
         LoadWorld(startWorld, true);
+        money = startMoney;
+        menu.Hide();
     }
 
     public void Loose()
     {
-        Debug.Log("Loose");
+        menu.Show();
     }
 
     public void Win()

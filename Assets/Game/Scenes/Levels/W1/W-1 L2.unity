@@ -637,7 +637,7 @@ MonoBehaviour:
   - {fileID: 320488336172548187, guid: 6a1836340d1d6754a9bfe462d99588db, type: 3}
   - {fileID: 320488336172548187, guid: ba6dfd6ea18e83842808fde0af35120d, type: 3}
   splineContainer: {fileID: 1916231488}
-  speed: 1
+  speed: 0.04
   minRecordDistance: 0.01
   maxHistoryLength: 200
   moveThreshold: 0.01
