@@ -5,8 +5,9 @@ public delegate void MultiplierEventHandler(Multiplier sender, Ball ball);
 
 public class Multiplier : MonoBehaviour
 {
+    [SerializeField] public float multipler;
+
     [SerializeField] private TextMeshPro txtMultiplier;
-    [SerializeField] private float multipler;
     [SerializeField] private ColliderEvent colliderEvent;
     [SerializeField] private string keyBall = "Ball";
 

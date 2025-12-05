@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: W-1
   m_EditorClassIdentifier: Assembly-CSharp::WorldData
   scenes:
-  - W-1 L1
-  - W-1 L2
-  - W-1 L3
-  - W-1 L4
-  - W-1 L5
+  - levelName: W-1 L1
+    moneyWhenLoose: 100
+  - levelName: W-1 L2
+    moneyWhenLoose: 0
+  - levelName: W-1 L3
+    moneyWhenLoose: 0
+  - levelName: W-1 L4
+    moneyWhenLoose: 0
+  - levelName: W-1 L5
+    moneyWhenLoose: 0

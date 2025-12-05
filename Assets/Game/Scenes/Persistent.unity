@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b36e06a84bbd84987035ba6832d631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Menu
+  txtCoins: {fileID: 1614503162}
 --- !u!1 &422524295
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +573,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8597820151326743965, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
+      propertyPath: upgradeType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -750,7 +755,7 @@ RectTransform:
   - {fileID: 1463347281}
   m_Father: {fileID: 131501259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.34424862}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -880,7 +885,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1217732951}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.15896599}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1141,6 +1146,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7596569681481869723, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
   m_PrefabInstance: {fileID: 1887471469}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1656401838 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8597820151326743965, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
+  m_PrefabInstance: {fileID: 1887471469}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60afb8fe5f7ac147bd386312a1c428e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardUpgrade
 --- !u!1 &1738847493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,6 +1359,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8597820151326743965, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
+      propertyPath: upgradeType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1353,11 +1373,33 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7596569681481869723, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
   m_PrefabInstance: {fileID: 752150117}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1981593582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8597820151326743965, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
+  m_PrefabInstance: {fileID: 752150117}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60afb8fe5f7ac147bd386312a1c428e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardUpgrade
 --- !u!224 &2005467386 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7596569681481869723, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
   m_PrefabInstance: {fileID: 1753398610669495330}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2005467387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8597820151326743965, guid: 05de8db2db39b334b814e191dfed867d, type: 3}
+  m_PrefabInstance: {fileID: 1753398610669495330}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60afb8fe5f7ac147bd386312a1c428e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardUpgrade
 --- !u!1 &2056060917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,10 +1433,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 52a22584690187149bef76eb2040f547, type: 2}
   - {fileID: 11400000, guid: 383d29779cef10e40b9938e86dc816ab, type: 2}
   startWorld: {fileID: 11400000, guid: 52a22584690187149bef76eb2040f547, type: 2}
-  startMoney: 0
+  startMoney: 100
   menu: {fileID: 131501260}
+  cardUpgrades:
+  - {fileID: 2005467387}
+  - {fileID: 1656401838}
+  - {fileID: 1981593582}
+  btnPlay: {fileID: 1217732952}
+  startFireRate: 0.5
+  startMultiplicator: 1
+  startMultiplierIncome: 1
   limit: {x: -2, y: 2}
-  money: 0
 --- !u!4 &2056060919
 Transform:
   m_ObjectHideFlags: 0

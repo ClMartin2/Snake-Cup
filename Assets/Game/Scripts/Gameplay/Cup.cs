@@ -14,7 +14,7 @@ public class Cup : MonoBehaviour
     [SerializeField] private int numberStartBall = 4;
     [SerializeField] private string ballKeyPool = "Ball";
     [SerializeField] private float delayToSpawnBall = 0.5f;
-    [SerializeField] private float delayToHaveNewBall = 0.1f;
+    [SerializeField] public float fireRate = 0.5f;
     [SerializeField] private int numberOfNewBall = 2;
     [SerializeField] private Transform ballSpawnPoint;
 
@@ -121,7 +121,7 @@ public class Cup : MonoBehaviour
 
         counterToHaveNewBall += Time.deltaTime;
 
-        if(counterToHaveNewBall >= delayToHaveNewBall)
+        if(counterToHaveNewBall >= fireRate)
         {
             counterNumberOfAvailableBall += numberOfNewBall;
             counterToHaveNewBall = 0;

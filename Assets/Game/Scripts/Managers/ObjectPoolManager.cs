@@ -17,50 +17,12 @@ public class ObjectPoolManager : MonoBehaviour
 
     private Dictionary<string, Queue<GameObject>> poolQueues = new Dictionary<string, Queue<GameObject>>();
     private Dictionary<GameObject, string> instanceToKey = new Dictionary<GameObject, string>();
+    private List<GameObject> allPoolObjects = new();
 
     private void Awake()
     {
         Instance = this;
         InitializePools();
-    }
-
-    private void InitializePools()
-    {
-        poolQueues.Clear();
-        instanceToKey.Clear();
-
-        foreach (var entry in Pools)
-        {
-            if (entry.Prefab == null || string.IsNullOrEmpty(entry.Key))
-                continue;
-
-            var q = new Queue<GameObject>();
-            poolQueues[entry.Key] = q;
-
-            var parent = new GameObject(entry.Key + "_Pool").transform;
-            parent.SetParent(transform);
-
-            for (int i = 0; i < entry.Count; i++)
-            {
-                var instance = CreateInstance(entry.Key, parent);
-                instance.SetActive(false);
-                q.Enqueue(instance);
-            }
-        }
-    }
-
-    private GameObject CreateInstance(string key, Transform parent)
-    {
-        var prefab = Pools.Find(p => p.Key == key)?.Prefab;
-        if (prefab == null)
-        {
-            Debug.LogWarning($"SimplePoolManager: prefab introuvable pour '{key}'.");
-            return null;
-        }
-
-        var obj = Instantiate(prefab, parent);
-        instanceToKey[obj] = key;
-        return obj;
     }
 
     public GameObject Get(string key)
@@ -103,5 +65,54 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Destroy(go);
         }
+    }
+
+    public void ReleaseAllObjects()
+    {
+        foreach (GameObject poolObject in allPoolObjects)
+        {
+            Release(poolObject);
+        }
+    }
+
+    private void InitializePools()
+    {
+        poolQueues.Clear();
+        instanceToKey.Clear();
+
+        foreach (var entry in Pools)
+        {
+            if (entry.Prefab == null || string.IsNullOrEmpty(entry.Key))
+                continue;
+
+            var q = new Queue<GameObject>();
+            poolQueues[entry.Key] = q;
+
+            var parent = new GameObject(entry.Key + "_Pool").transform;
+            parent.SetParent(transform);
+
+            for (int i = 0; i < entry.Count; i++)
+            {
+                var instance = CreateInstance(entry.Key, parent);
+                instance.SetActive(false);
+                q.Enqueue(instance);
+            }
+        }
+    }
+
+    private GameObject CreateInstance(string key, Transform parent)
+    {
+        var prefab = Pools.Find(p => p.Key == key)?.Prefab;
+        if (prefab == null)
+        {
+            Debug.LogWarning($"SimplePoolManager: prefab introuvable pour '{key}'.");
+            return null;
+        }
+
+        GameObject obj = Instantiate(prefab, parent);
+        instanceToKey[obj] = key;
+        allPoolObjects.Add(obj);
+
+        return obj;
     }
 }
