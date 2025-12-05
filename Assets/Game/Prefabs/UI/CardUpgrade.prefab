@@ -52,9 +52,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardUpgrade
   btnBuyUpgrade: {fileID: 400980652305112039}
   txtCost: {fileID: 8926019111338089682}
+  txtValue: {fileID: 7640583328632082860}
   initialCost: 50
   multiplierCost: 1.5
   upgradeType: 0
+  upgradesValue: 0
+  _operator: 0
 --- !u!1 &1914580160342461293
 GameObject:
   m_ObjectHideFlags: 0

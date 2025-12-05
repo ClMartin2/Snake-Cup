@@ -14,13 +14,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CardUpgrade[] cardUpgrades;
     [SerializeField] private Button btnPlay;
     [SerializeField] private ObjectPoolManager pool;
+    [SerializeField] private Vector2 limit = new Vector2(2, 2);
 
     [Header("Upgrade Settings")]
     [SerializeField] private float startFireRate = 0.5f;
-    [SerializeField] private float startMultiplicator = 1f;
+    [SerializeField] private int startAdditionalMultiplier = 0;
     [SerializeField] private float startMultiplierIncome = 1f;
-
-    [SerializeField] private Vector2 limit = new Vector2(2, 2);
 
     public static Vector2 Limit;
     public static GameManager Instance;
@@ -32,8 +31,8 @@ public class GameManager : MonoBehaviour
     private string currentScene;
 
     private float fireRate;
-    private float multiplicator;
-    private float multiplierIncome;
+    private int additionalMultiplier;
+    private float multiplierIncome = 1;
 
     private Cup cup;
     private List<Multiplier> multipliers = new();
@@ -62,33 +61,39 @@ public class GameManager : MonoBehaviour
         }
 
         fireRate = startFireRate;
-        multiplicator = startMultiplicator;
+        additionalMultiplier = startAdditionalMultiplier;
         multiplierIncome = startMultiplierIncome;
 
         btnPlay.onClick.AddListener(OnClickPlay);
     }
 
-    private void LocalLevelManager_updateRef(LocalLevelManager sender, Cup _cup, List<Multiplier> _multipliers)
+    private void ApplyFireRateUpgrade()
     {
-        cup = _cup;
-        multipliers = _multipliers;
-
         cup.fireRate = fireRate;
+    }
 
+    private void ApplyMultiplierUpgrade()
+    {
         foreach (Multiplier multiplier in multipliers)
         {
-            multiplier.multipler *= multiplicator;
+            multiplier.UpdateMultiplier(multiplier.startMultiplier + additionalMultiplier);
         }
     }
 
     private void LocalLevelManager_loose(LocalLevelManager sender)
     {
+        money += currentWorldData.scenes[currentLevelIndex].moneyWhenLoose;
+        UpdateTxtCoin();
+
         pool.ReleaseAllObjects();
         menu.Show();
     }
 
     private void LocalLevelManager_win(LocalLevelManager sender)
     {
+        money += currentWorldData.scenes[currentLevelIndex].moneyWhenWin;
+        UpdateTxtCoin();
+
         pool.ReleaseAllObjects();
         GoToNextLevel();
     }
@@ -99,7 +104,7 @@ public class GameManager : MonoBehaviour
         localLevelManager.Play();
     }
 
-    private bool CardUpgrade_buyUpgrade(CardUpgrade sender, int cost, EUpgradesTypes upgradeType)
+    private bool CardUpgrade_buyUpgrade(CardUpgrade sender, int cost, EUpgradesTypes upgradeType, float upgradeValue, Operator _operator)
     {
         if (money < cost)
             return false;
@@ -109,10 +114,15 @@ public class GameManager : MonoBehaviour
         switch (upgradeType)
         {
             case EUpgradesTypes.FIRE_RATE:
+                fireRate = OperatorUtils.Apply(_operator,fireRate,upgradeValue);
+                ApplyFireRateUpgrade();
                 break;
             case EUpgradesTypes.MULTIPLICATOR:
+                additionalMultiplier = (int)OperatorUtils.Apply(_operator, additionalMultiplier, upgradeValue);
+                ApplyMultiplierUpgrade();
                 break;
             case EUpgradesTypes.INCOME:
+                multiplierIncome = OperatorUtils.Apply(_operator, multiplierIncome, upgradeValue);
                 break;
         }
 
@@ -132,13 +142,17 @@ public class GameManager : MonoBehaviour
 
         localLevelManager = LocalLevelManager.Instance;
 
+        cup = localLevelManager.cup;
+        multipliers = localLevelManager.multipliers;
+
+        ApplyFireRateUpgrade();
+        ApplyMultiplierUpgrade();
+
         localLevelManager.win -= LocalLevelManager_win;
         localLevelManager.loose -= LocalLevelManager_loose;
-        localLevelManager.updateRef -= LocalLevelManager_updateRef;
 
         localLevelManager.win += LocalLevelManager_win;
         localLevelManager.loose += LocalLevelManager_loose;
-        localLevelManager.updateRef += LocalLevelManager_updateRef;
     }
 
     private async Task LoadWorld(WorldData worldData, bool startScene = false)

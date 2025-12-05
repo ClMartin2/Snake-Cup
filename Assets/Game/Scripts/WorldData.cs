@@ -11,5 +11,6 @@ public class WorldData : ScriptableObject
 public struct Level
 {
     public string levelName;
-    public float moneyWhenLoose;
+    public int moneyWhenLoose;
+    public int moneyWhenWin;
 }

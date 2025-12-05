@@ -15,11 +15,16 @@ MonoBehaviour:
   scenes:
   - levelName: W-1 L1
     moneyWhenLoose: 100
+    moneyWhenWin: 150
   - levelName: W-1 L2
     moneyWhenLoose: 0
+    moneyWhenWin: 0
   - levelName: W-1 L3
     moneyWhenLoose: 0
+    moneyWhenWin: 0
   - levelName: W-1 L4
     moneyWhenLoose: 0
+    moneyWhenWin: 0
   - levelName: W-1 L5
     moneyWhenLoose: 0
+    moneyWhenWin: 0

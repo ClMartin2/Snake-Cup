@@ -5,7 +5,7 @@ public delegate void MultiplierEventHandler(Multiplier sender, Ball ball);
 
 public class Multiplier : MonoBehaviour
 {
-    [SerializeField] public float multipler;
+    [field: SerializeField] private int multipler;
 
     [SerializeField] private TextMeshPro txtMultiplier;
     [SerializeField] private ColliderEvent colliderEvent;
@@ -13,10 +13,24 @@ public class Multiplier : MonoBehaviour
 
     public event MultiplierEventHandler CreateBallMultiplier;
 
+    public int startMultiplier { get; private set; } = 0;
+
     private void Awake()
     {
-        txtMultiplier.text = multipler.ToString();
+        startMultiplier = multipler;
+        UpdateMultiplier(multipler);
         colliderEvent.triggerEnter += ColliderEvent_triggerEnter;
+    }
+
+    private void OnValidate()
+    {
+        UpdateMultiplier(multipler);
+    }
+
+    public void UpdateMultiplier(int multiplier)
+    {
+        multipler = multiplier;
+        txtMultiplier.text = multipler.ToString();
     }
 
     private void ColliderEvent_triggerEnter(ColliderEvent sender, Collider2D collision)
